@@ -1,0 +1,27 @@
+{
+  "name": "task_manager",
+  "version": "1.0.0",
+  "description": "Challenge provided by Sword Health",
+  "main": "index.js",
+  "scripts": {
+    "test": "test", 
+    "lint": "eslint --ignore-path .gitignore ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heitoranjos15/task_manager.git"
+  },
+  "author": "Heitor Anjos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heitoranjos15/task_manager/issues"
+  },
+  "homepage": "https://github.com/heitoranjos15/task_manager#readme",
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "eslint": "^8.26.0"
+  }
+}
