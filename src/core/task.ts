@@ -16,11 +16,13 @@ const createTask = (summary: string, date: Date): TaskManagerReturn<ITask> => {
     }
   }
   return {
-    result: { type: 'success' },
-    data: {
-      id: 0,
-      summary,
-      date,
+    result: {
+      type: 'success',
+      data: {
+        id: 0,
+        summary,
+        date,
+      }
     }
   }
 }
@@ -35,12 +37,14 @@ const editTask = (id: number, summary?: string, date?: Date): TaskManagerReturn<
     }
   }
   return {
-    result: { type: 'success' },
-    data: {
-      id,
-      summary,
-      date,
-    }
+    result: {
+      type: 'success',
+      data: {
+        id,
+        summary,
+        date,
+      }
+    },
   }
 }
 

@@ -1,9 +1,9 @@
 export interface TaskManagerReturn<T> {
-  result: Success | Error,
-  data?: T
+  result: Success<T> | Error,
 }
-interface Success {
+interface Success<T> {
   type: 'success'
+  data: T
 }
 
 interface Error {
