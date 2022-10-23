@@ -5,12 +5,14 @@ const today = new Date()
 const tomorrow = addDays(today, 1)
 
 const expectTask = {
-  result: { type: 'success' },
-  data: {
-    id: 0,
-    summary: 'task',
-    date: today
-  }
+  result: {
+    type: 'success',
+    data: {
+      id: 0,
+      summary: 'task',
+      date: today
+    }
+  },
 }
 
 describe('core/task', () => {
