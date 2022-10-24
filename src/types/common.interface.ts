@@ -1,4 +1,4 @@
-export interface TaskManagerReturn<T> {
+export interface TaskBoardReturn<T> {
   result: Success<T> | Error,
 }
 interface Success<T> {
