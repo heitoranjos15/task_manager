@@ -1,24 +1,17 @@
 import { isAlreadyDone } from '../../helpers/date-validations'
-import { TaskBoardReturn } from '../../types/common.interface'
+import { getTaskById } from './list-task'
 import { ITask } from './types'
 
-export const editTask = (id: number, summary?: string, date?: Date): TaskBoardReturn<ITask> => {
+export const editTask = (id: number, taskEditData: Partial<ITask>): boolean => {
+  const task = getTaskById(id)
+
+  if (!task) {
+    throw Error('Task not found')
+  }
+
+  const { date } = taskEditData;
   if (date && !isAlreadyDone(date)) {
-    return {
-      result: {
-        type: 'error',
-        message: 'Task cannot be edit with date greater than now',
-      }
-    }
+    throw Error('Task cannot be edit with date greater than now')
   }
-  return {
-    result: {
-      type: 'success',
-      data: {
-        id,
-        summary,
-        date,
-      }
-    },
-  }
+  return true
 }
