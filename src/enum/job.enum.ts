@@ -1,4 +1,4 @@
 export enum EJob {
-  MANAGER = 1,
-  TECH = 0
+  MANAGER = 0,
+  TECH = 1
 }
