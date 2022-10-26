@@ -1,5 +1,5 @@
 import { ITask } from './types'
-import { formatEmployee } from '../employee/get-employee'
+import { formatEmployee } from '../employee/helper'
 
 export const formatTask = (data: any): ITask => {
   return {

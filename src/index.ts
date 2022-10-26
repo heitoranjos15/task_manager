@@ -3,6 +3,7 @@ import * as express from 'express'
 
 import db from './database/models'
 import { authenticateToken } from './server/middleware/authenticate'
+import { errorHandler } from './server/middleware/errorHandler'
 import * as employeeRoute from './server/route/employee-route'
 import * as taskRoute from './server/route/task-route'
 import * as loginRoute from './server/route/login-route'
@@ -23,6 +24,9 @@ app.put('/employee/task/:id', authenticateToken, employeeRoute.editEmployeeTask)
 app.delete('/employee/task/:id', authenticateToken, employeeRoute.deleteEmployeeTask)
 
 app.post('/task', authenticateToken, taskRoute.createTask)
+
+app.use(errorHandler)
+
 
 db.sequelize.sync().then(() => {
   app.listen(port, () => {

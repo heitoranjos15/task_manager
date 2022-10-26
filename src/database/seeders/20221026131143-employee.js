@@ -6,25 +6,25 @@ module.exports = {
     return queryInterface.bulkInsert('employee', [
       {
         name: 'John',
-        job: 1,
+        job: 0,
         username: 'john',
         password: 'manager',
       },
       {
         name: 'Josh',
-        job: 2,
+        job: 1,
         username: 'josh',
         password: 'josh',
       },
       {
         name: 'Jim',
-        job: 2,
+        job: 1,
         username: 'Jim',
         password: 'jim',
       },
       {
         name: 'Joe',
-        job: 2,
+        job: 1,
         username: 'joe',
         password: 'joe',
       }

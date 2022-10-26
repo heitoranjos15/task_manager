@@ -1,3 +1,4 @@
+import { TasManagerkErrors } from '../../exception/taskManagerErrors'
 import { ITask } from '../task/types'
 import { getTasks, getTaskById, getTasksByEmployee } from '../task/list-task'
 import { editTask } from '../task/edit-task'
@@ -14,7 +15,7 @@ export const getEmployeeTask = async (taskId: number, employee: IEmployee): Prom
   const task = await getTaskById(taskId, employee.id)
 
   if (isTech(employee) && !taskIsFromEmployee(task, employee)) {
-    throw Error('You havent a permission')
+    throw Error(TasManagerkErrors.NO_AUTHORIZATION)
   }
   return task
 }
@@ -23,14 +24,14 @@ export const getEmployeeTaskList = async (employee: IEmployee): Promise<ITask[]>
   const tasks = await getTasksByEmployee(employee.id)
 
   if (!tasks?.length) {
-    throw Error('You have no task')
+    throw Error(TasManagerkErrors.NOT_FOUND)
   }
   return tasks
 }
 
-export const getAllTasks = (employee: IEmployee): Promise<ITask[]> => {
+export const getAllTasks = async (employee: IEmployee): Promise<ITask[]> => {
   if (isTech(employee)) {
-    throw Error('You havent a permission')
+    throw Error(TasManagerkErrors.NO_AUTHORIZATION)
   }
 
   return getTasks()
@@ -38,18 +39,22 @@ export const getAllTasks = (employee: IEmployee): Promise<ITask[]> => {
 
 export const deleteTask = async (taskId: number, employee: IEmployee): Promise<boolean> => {
   if (isTech(employee)) {
-    throw Error('You havent a permission')
+    throw Error(TasManagerkErrors.NO_AUTHORIZATION)
   }
-  await taskRepository.deleteTask(taskId)
+  try {
+    await taskRepository.deleteTask(taskId)
+  } catch (error) {
+    console.error('/deleteTask', error)
+    throw Error(TasManagerkErrors.UNEXPECTED)
+  }
   return true
 }
 
 export const editEmployeeTask = async (taskId: number, employee: IEmployee, task: Partial<ITask>): Promise<boolean> => {
   const taskResult = await getTaskById(taskId)
   if (isTech(employee) && !taskIsFromEmployee(taskResult, employee)) {
-    throw Error('You havent a permission')
+    throw Error(TasManagerkErrors.NO_AUTHORIZATION)
   }
   await editTask(taskId, task)
   return true
 }
-

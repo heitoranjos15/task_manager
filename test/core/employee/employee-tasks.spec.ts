@@ -9,50 +9,50 @@ describe('/core/employee/employee-tasks', () => {
   })
 
   describe('/getEmployeeTask', () => {
-    it('should return task', () => {
-      jest.spyOn(listTask, 'getTaskById').mockReturnValueOnce(taskMock)
+    it('should return task', async () => {
+      jest.spyOn(listTask, 'getTaskById').mockResolvedValueOnce(taskMock)
 
-      expect(employeeTask.getEmployeeTask(0, employeeTech)).toEqual(taskMock)
+      expect(await employeeTask.getEmployeeTask(0, employeeTech)).toEqual(taskMock)
     })
 
-    it('should return employee task when a manager are requesting', () => {
-      jest.spyOn(listTask, 'getTaskById').mockReturnValueOnce(taskMock)
+    it('should return employee task when a manager are requesting', async () => {
+      jest.spyOn(listTask, 'getTaskById').mockResolvedValueOnce(taskMock)
 
-      expect(employeeTask.getEmployeeTask(0, employeeManager)).toEqual(taskMock)
+      expect(await employeeTask.getEmployeeTask(0, employeeManager)).toEqual(taskMock)
     })
 
-    it('should throw error because task isnt from the same employee', () => {
+    it('should throw error because task isnt from the same employee', async () => {
       const taskFromOtherEmployee = { ...taskMock, employee: { id: 99, name: 'invalid', job: taskMock.employee.job } }
 
-      jest.spyOn(listTask, 'getTaskById').mockReturnValueOnce(taskFromOtherEmployee)
-      expect(() => employeeTask.getEmployeeTask(0, employeeTech)).toThrowError('You havent a permission')
+      jest.spyOn(listTask, 'getTaskById').mockResolvedValueOnce(taskFromOtherEmployee)
+      expect(employeeTask.getEmployeeTask(0, employeeTech)).rejects.toEqual(Error('NO_AUTHORIZATION'))
     })
   })
 
   describe('/getEmployeeTaskList', () => {
-    it('should return employee task', () => {
-      jest.spyOn(listTask, 'getTasksByEmployee').mockReturnValueOnce([taskMock])
+    it('should return employee task', async () => {
+      jest.spyOn(listTask, 'getTasksByEmployee').mockResolvedValueOnce([taskMock])
 
-      expect(employeeTask.getEmployeeTaskList(employeeTech)).toEqual([taskMock])
+      expect(await employeeTask.getEmployeeTaskList(employeeTech)).toEqual([taskMock])
     })
 
-    it('should throw error telling employee has no tasks', () => {
-      jest.spyOn(listTask, 'getTasksByEmployee').mockReturnValueOnce([])
+    it('should throw error telling employee has no tasks', async () => {
+      jest.spyOn(listTask, 'getTasksByEmployee').mockResolvedValueOnce([])
 
-      expect(() => employeeTask.getEmployeeTaskList(employeeTech)).toThrowError('You have no task')
+      expect(employeeTask.getEmployeeTaskList(employeeTech)).rejects.toEqual(Error('NOT_FOUND'))
     })
   })
 
   describe('/getAllTasks', () => {
-    it('should return all tasks', () => {
-      jest.spyOn(listTask, 'getTasks').mockReturnValueOnce([taskMock])
-      expect(employeeTask.getAllTasks(employeeManager)).toEqual([taskMock])
+    it('should return all tasks', async () => {
+      jest.spyOn(listTask, 'getTasks').mockResolvedValueOnce([taskMock])
+      expect(await employeeTask.getAllTasks(employeeManager)).toEqual([taskMock])
     })
 
-    it('should throw error telling employee has no permition', () => {
+    it('should throw error telling employee has no permition', async () => {
       const mockGetTasks = jest.spyOn(listTask, 'getTasks')
 
-      expect(() => employeeTask.getAllTasks(employeeTech)).toThrowError('You havent a permission')
+      expect(employeeTask.getAllTasks(employeeTech)).rejects.toEqual(Error('NO_AUTHORIZATION'))
       expect(mockGetTasks).not.toBeCalled()
     })
   })
