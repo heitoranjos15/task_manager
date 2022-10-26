@@ -5,7 +5,7 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
+const config = require('../../../config/config')[env];
 const db: any = {};
 
 let sequelize: any;
@@ -25,11 +25,10 @@ fs
     db[model.name] = model;
   });
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+db.Employee.hasOne(db.Task, {
+  foreignKey: 'employeeId'
+})
+db.Task.belongsTo(db.Employee)
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

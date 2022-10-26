@@ -4,18 +4,18 @@ export const employeeTaskList = async (req: any, res) => {
   res.json(await employeeCore.getEmployeeTaskList(req.user))
 }
 
-export const employeeTask = (req: any, res) => {
-  res.json(employeeCore.getEmployeeTask(req.params.id, req.user))
+export const employeeTask = async (req: any, res) => {
+  res.json(await employeeCore.getEmployeeTask(req.params.id, req.user))
 }
 
-export const allTasks = (req: any, res) => {
-  res.json(employeeCore.getAllTasks(req.user))
+export const allTasks = async (req: any, res) => {
+  res.json(await employeeCore.getAllTasks(req.user))
 }
 
-export const editEmployeeTask = (req: any, res) => {
-  res.json(employeeCore.editEmployeeTask(req.params.id, req.body, req.user))
+export const editEmployeeTask = async (req: any, res) => {
+  res.json(await employeeCore.editEmployeeTask(req.params.id, req.user, req.body))
 }
 
-export const deleteEmployeeTask = (req: any, res) => {
-  res.json(employeeCore.deleteTask(req.params.id, req.user))
+export const deleteEmployeeTask = async (req: any, res) => {
+  res.json(await employeeCore.deleteTask(req.params.id, req.user))
 }

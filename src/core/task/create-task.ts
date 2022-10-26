@@ -1,26 +1,19 @@
-import { isAlreadyDone } from '../../helpers/date-validations'
-import { TaskBoardReturn } from '../../types/common.interface'
-import { IEmployee } from '../employee/type'
+import { isAlreadyDone } from '../../helper/date-validations'
+import { IEmployee } from '../employee/types'
 import { ITask } from './types'
+import { formatTask } from './helper'
+import * as taskRepository from '../../database/repositories/task-repository'
 
-export const createTask = (summary: string, date: Date, employee: IEmployee): TaskBoardReturn<ITask> => {
-  if (!isAlreadyDone(date)) {
-    return {
-      result: {
-        type: 'error',
-        message: 'Save only tasks that you already performed'
-      }
-    }
+export const createTask = async (summary: string, datePerformed: Date, employee: IEmployee): Promise<ITask> => {
+  if (!isAlreadyDone(datePerformed)) {
+    throw Error('Save only tasks that you already performed')
   }
-  return {
-    result: {
-      type: 'success',
-      data: {
-        id: 0,
-        summary,
-        date,
-        employee,
-      }
-    }
+
+  try {
+    const result = await taskRepository.createTask(summary, datePerformed, employee.id)
+    return formatTask(result)
+  } catch (error) {
+    console.error(error)
+    throw error
   }
 }

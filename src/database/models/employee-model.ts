@@ -1,29 +1,23 @@
 export = (sequelize: any, DataTypes: any) =>
-  sequelize.define('Task',
+  sequelize.define('Employee',
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      summary: {
-        type: DataTypes.STRING(2500),
+      name: {
+        type: DataTypes.STRING,
         allowNull: false
       },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      employee: {
+      job: {
         type: DataTypes.INTEGER,
-        references: 'employee',
-        referencesKey: 'id',
         allowNull: false
       }
     },
     {
-      tableName: 'task',
-      createdAt: 'create_at',
+      tableName: 'employee',
+      createdAt: 'created_at',
       updatedAt: 'updated_at',
       timestamp: true
     }
