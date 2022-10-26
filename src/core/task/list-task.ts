@@ -1,19 +1,31 @@
 import { ITask } from './types'
-import { task } from '../../database/mock'
+import { formatTask } from './helper'
+import * as taskRepository from '../../database/repositories/task-repository'
 
-export const getTaskById = (id: number): ITask => {
-  return task.find(task => task.id === id)
+export const getTaskById = async (id: number, employeeId?: number): Promise<ITask> => {
+  try {
+    const result = await taskRepository.findTaskById(id, employeeId)
+    return formatTask(result)
+  } catch (error) {
+    throw error
+  }
 }
 
-export const getTaskByEmployee = (id: number, employeeId: number): ITask => {
-  return task.find(task => task.id === id && task.employee.id === employeeId)
+export const getTasksByEmployee = async (employeeId: number): Promise<ITask[]> => {
+  try {
+    const result = await taskRepository.findTasksByEmployee(employeeId)
+    return result.map((task: any) => formatTask(task))
+  } catch (error) {
+    throw error
+  }
 }
 
-export const getTasksByEmployee = (employeeId: number): ITask[] => {
-  return task.filter(task => task.employee.id === employeeId)
-}
-
-export const getTasks = (): ITask[] => {
-  return task;
+export const getTasks = async (): Promise<ITask[]> => {
+  try {
+    const result = await taskRepository.findAllTask()
+    return result.map((task: any) => formatTask(task))
+  } catch (error) {
+    throw error
+  }
 }
 

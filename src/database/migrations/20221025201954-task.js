@@ -14,12 +14,8 @@ module.exports = {
         type: Sequelize.DataTypes.STRING(2500),
         allowNull: false
       },
-      date: {
+      datePerformed: {
         type: Sequelize.DataTypes.DATE,
-        allowNull: false
-      },
-      notified: {
-        type: Sequelize.DataTypes.BOOLEAN,
         allowNull: false
       },
       employeeId: {

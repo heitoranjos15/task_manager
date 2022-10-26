@@ -18,6 +18,14 @@ module.exports = {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false
       },
+      username: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false
+      },
+      password: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false
+      },
       created_at: {
         type: Sequelize.DATE
       },
