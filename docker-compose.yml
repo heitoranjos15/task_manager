@@ -27,6 +27,8 @@ services:
     command: /bin/sh -c "while sleep 1000; do :; done"
     networks:
       - task-manager-network
+    volumes:
+      - ./src:/app/src
     environment:
         DB_USER: root
         DB_PASS: task_manager
