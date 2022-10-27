@@ -4,7 +4,7 @@ import { IEmployee } from '../employee/types'
 import { ITask } from './types'
 import { formatTask } from './helper'
 import * as taskRepository from '../../database/repositories/task-repository'
-import { addList } from '../../helper/redis'
+import { addList } from '../../server/services/redis'
 
 export const createTask = async (summary: string, datePerformed: Date, employee: IEmployee): Promise<ITask> => {
   if (!isAlreadyDone(datePerformed)) {

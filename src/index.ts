@@ -45,5 +45,4 @@ cron.schedule('*/10 * * * * *', async () => {
   } catch (error) {
     console.log(error)
   }
-  console.log('running a task every 10 second')
 })

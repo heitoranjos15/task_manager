@@ -7,6 +7,14 @@ services:
       - 6379
     networks:
       - task-manager-network
+
+  rabbitmq:
+    image: rabbitmq:3.10-rc-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - task-manager-network
   db:
     image: mysql:8.0
     environment:
@@ -32,6 +40,8 @@ services:
         condition: service_started
       redis:
         condition: service_started
+      rabbitmq:
+        condition: service_started
 
     command: /bin/sh -c "while sleep 1000; do :; done"
     networks:
@@ -44,6 +54,7 @@ services:
         DB_NAME: task_manager
         DB_HOST: db
         REDIS_URL: redis://redis
+        AMQP_URL: amqp://guest:guest@rabbitmq:5672
 
 volumes:
   db:
