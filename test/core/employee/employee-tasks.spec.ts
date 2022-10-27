@@ -1,7 +1,9 @@
 import * as employeeTask from '../../../src/core/employee/employee-tasks'
 import * as listTask from '../../../src/core/task/list-task'
+import * as editTask from '../../../src/core/task/edit-task'
 import { employeeManager, employeeTech } from '../../mocks/employee-mock'
 import { taskMock } from '../../mocks/task-mock'
+import * as taskRepository from '../../../src/database/repositories/task-repository'
 
 describe('/core/employee/employee-tasks', () => {
   afterEach(() => {
@@ -54,6 +56,45 @@ describe('/core/employee/employee-tasks', () => {
 
       expect(employeeTask.getAllTasks(employeeTech)).rejects.toEqual(Error('NO_AUTHORIZATION'))
       expect(mockGetTasks).not.toBeCalled()
+    })
+  })
+
+  describe('/deleteTask', () => {
+    it('should return success message', async () => {
+      const repositoryMock = jest.spyOn(taskRepository, 'deleteTask').mockResolvedValueOnce({})
+      expect(await employeeTask.deleteTask(taskMock.id, employeeManager)).toEqual({
+        id: taskMock.id,
+        message: 'Task deleted with success',
+        result: 'deleted'
+      })
+      expect(repositoryMock).toBeCalled()
+    })
+
+    it('should throw error telling employee has no permition', async () => {
+      const repositoryMock = jest.spyOn(taskRepository, 'deleteTask').mockResolvedValueOnce({})
+      expect(employeeTask.deleteTask(taskMock.id, employeeTech)).rejects.toEqual(Error('NO_AUTHORIZATION'))
+      expect(repositoryMock).not.toBeCalled()
+    })
+  })
+
+  describe('/editEmployeeTask', () => {
+    it('should return success message', async () => {
+      jest.spyOn(listTask, 'getTaskById').mockResolvedValueOnce(taskMock)
+      const editTaskMock = jest.spyOn(editTask, 'editTask').mockResolvedValueOnce(undefined)
+      expect(await employeeTask.editEmployeeTask(taskMock.id, employeeTech, { datePerformed: new Date() })).toEqual({
+        id: taskMock.id,
+        message: 'Task updated with success',
+        result: 'updated'
+      })
+      expect(editTaskMock).toBeCalled()
+    })
+
+    it('should throw error telling employee has no permition', async () => {
+      jest.spyOn(listTask, 'getTaskById').mockResolvedValueOnce(taskMock)
+      const editTaskMock = jest.spyOn(editTask, 'editTask').mockResolvedValueOnce(undefined)
+      expect(employeeTask.editEmployeeTask(taskMock.id, employeeManager, { datePerformed: new Date() }))
+        .rejects.toEqual(Error('NO_AUTHORIZATION'))
+      expect(editTaskMock).not.toBeCalled()
     })
   })
 })

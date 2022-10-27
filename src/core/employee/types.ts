@@ -5,3 +5,9 @@ export interface IEmployee {
   name: string
   job: EJob | string
 }
+
+export interface ISuccess {
+  id: number,
+  message: string,
+  result: string
+}
