@@ -5,7 +5,7 @@ import { editTask } from '../task/edit-task'
 import * as taskRepository from '../../database/repositories/task-repository'
 
 import { EJob } from '../../enum/job.enum'
-import { IEmployee } from './types'
+import { IEmployee, ISuccess } from './types'
 
 const isTech = (employee: IEmployee): boolean => employee.job === EJob.TECH
 
@@ -37,7 +37,7 @@ export const getAllTasks = async (employee: IEmployee): Promise<ITask[]> => {
   return getTasks()
 }
 
-export const deleteTask = async (taskId: number, employee: IEmployee): Promise<boolean> => {
+export const deleteTask = async (taskId: number, employee: IEmployee): Promise<ISuccess> => {
   if (isTech(employee)) {
     throw Error(TasManagerkErrors.NO_AUTHORIZATION)
   }
@@ -47,14 +47,23 @@ export const deleteTask = async (taskId: number, employee: IEmployee): Promise<b
     console.error('/deleteTask', error)
     throw Error(TasManagerkErrors.UNEXPECTED)
   }
-  return true
+  return {
+    id: taskId,
+    message: 'Task deleted with success',
+    result: 'deleted'
+  }
 }
 
-export const editEmployeeTask = async (taskId: number, employee: IEmployee, task: Partial<ITask>): Promise<boolean> => {
+export const editEmployeeTask = async (taskId: number, employee: IEmployee, task: Partial<ITask>): Promise<ISuccess> => {
   const taskResult = await getTaskById(taskId)
-  if (isTech(employee) && !taskIsFromEmployee(taskResult, employee)) {
+  if (!taskIsFromEmployee(taskResult, employee)) {
     throw Error(TasManagerkErrors.NO_AUTHORIZATION)
   }
   await editTask(taskId, task)
-  return true
+
+  return {
+    id: taskId,
+    message: 'Task updated with success',
+    result: 'updated'
+  }
 }
