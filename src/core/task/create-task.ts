@@ -4,7 +4,7 @@ import { IEmployee } from '../employee/types'
 import { ITask } from './types'
 import { formatTask } from './helper'
 import * as taskRepository from '../../database/repositories/task-repository'
-import { addList } from '../../server/services/redis'
+import { publishToQueue } from '../../server/services/message-queue'
 
 export const createTask = async (summary: string, datePerformed: Date, employee: IEmployee): Promise<ITask> => {
   if (!isAlreadyDone(datePerformed)) {
@@ -15,7 +15,9 @@ export const createTask = async (summary: string, datePerformed: Date, employee:
     const result = await taskRepository.createTask(summary, datePerformed, employee.id)
     const task = formatTask(result)
 
-    await addList('notify-task', JSON.stringify({ ...task, employee }))
+    const notifyMessage = `The Tech ${employee.name} performed task ${task.id} on date ${datePerformed}`
+    console.log('sending message to notify-task', { task: task.id, employeeName: employee.name })
+    await publishToQueue('notify-task', notifyMessage)
 
     return task
   } catch (error) {
