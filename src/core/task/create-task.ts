@@ -4,6 +4,7 @@ import { IEmployee } from '../employee/types'
 import { ITask } from './types'
 import { formatTask } from './helper'
 import * as taskRepository from '../../database/repositories/task-repository'
+import { addList } from '../../server/services/redis'
 
 export const createTask = async (summary: string, datePerformed: Date, employee: IEmployee): Promise<ITask> => {
   if (!isAlreadyDone(datePerformed)) {
@@ -12,7 +13,11 @@ export const createTask = async (summary: string, datePerformed: Date, employee:
 
   try {
     const result = await taskRepository.createTask(summary, datePerformed, employee.id)
-    return formatTask(result)
+    const task = formatTask(result)
+
+    await addList('notify-task', JSON.stringify({ ...task, employee }))
+
+    return task
   } catch (error) {
     console.log('/createTask', error)
     throw Error(TasManagerkErrors.UNEXPECTED)
