@@ -8,6 +8,10 @@ import * as employeeRoute from './server/route/employee-route'
 import * as taskRoute from './server/route/task-route'
 import * as loginRoute from './server/route/login-route'
 
+import * as cron from 'node-cron'
+import { client } from './helper/redis'
+import { jobNotifyTaskCreated } from './server/job/notify-manager'
+
 dotenv.config()
 
 const app = express()
@@ -28,8 +32,18 @@ app.post('/task', authenticateToken, taskRoute.createTask)
 app.use(errorHandler)
 
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync().then(async () => {
   app.listen(port, () => {
     console.log(`App listening port ${port}`)
   })
+  await client.connect()
+})
+
+cron.schedule('*/10 * * * * *', async () => {
+  try {
+    await jobNotifyTaskCreated()
+  } catch (error) {
+    console.log(error)
+  }
+  console.log('running a task every 10 second')
 })
