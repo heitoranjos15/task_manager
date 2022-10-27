@@ -1,4 +1,4 @@
-# task_manager
+# Task manager
 Challenge provided by Sword Health
 
 # Summary
@@ -46,8 +46,8 @@ $ npm i
 ### <a name="docker"></a> Docker & docker-compose
 You need to install docker and docker-compose to run the application locally.
 
-Docker: (https://docs.docker.com/engine/install)
-docker-compose: (https://www.digitalocean.com/community/tutorial_collections/how-to-install-docker-compose)
+- [Docker](https://docs.docker.com/engine/install)
+- [docker-compose](https://www.digitalocean.com/community/tutorial_collections/how-to-install-docker-compose)
 
 ### Build application
 After you had installed Docker and docker-compose, you'll be able to run:
@@ -72,20 +72,77 @@ $ npm run test
 ```
 
 ### Routes
-- POST localhost:4000/login
+**Login**
+```curl
+curl --request POST \
+  --url http://localhost:4000/login \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"username": "john",
+	"password": "manager"
+}'
+```
+**Create Task**
+```curl
+curl --request POST \
+  --url http://localhost:4000/task \
+  --header 'Authorization: Bearer {token}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"summary": "task teste",
+	"date": "2022-02-02"
+}'
+```
+**Edit employee task**
+```curl
+curl --request PUT \
+  --url http://localhost:4000/employee/tasks \
+  --header 'Authorization: Bearer {token}'
+  --header 'Content-Type: application/json' \
+  --data '{
+	"summary": "task teste",
+	"date": "2022-02-02"
+}'
+```
 
-**Bearer authentication required:**
-- POST localhost:4000/task
-- POST localhost:4000/employee
-- GET  localhost:4000/employee/tasks
-- GET  localhost:4000/employee/task/:id
-- GET  localhost:4000/employee/allTask
-- PUT  localhost:4000/employee/task/:id
-- DELETE  localhost:4000/employee/task/:id
+**Delete task**
+```curl
+curl --request DELETE \
+  --url http://localhost:4000/employee/task/1 \
+  --header 'Authorization: Bearer {token}'
+```
 
+**Employee Tasks**
+```curl
+curl --request GET \
+  --url http://localhost:4000/employee/tasks \
+  --header 'Authorization: Bearer {token}'
+}'
+```
 
+**Employee task by id**
+```curl
+curl --request GET \
+  --url http://localhost:4000/employee/task \
+  --header 'Authorization: Bearer {token}'
+}'
+```
 
+**All tasks**
+```curl
+curl --request GET \
+  --url http://localhost:4000/employee/allTasks \
+  --header 'Authorization: Bearer {token}'
+}'
+```
+  
 ### RabbitMQ
-To see the messages sent to queue, after the build you can access the local address: http://localhost:15672
+To see the messages sent to queue, after the build you can access the local address: 
 
-Username and password are both with value `guest`
+http://localhost:15672
+
+Credentials:
+```
+username: guest
+password: guest
+```
